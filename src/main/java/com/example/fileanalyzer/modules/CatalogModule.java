@@ -20,7 +20,5 @@ public abstract class CatalogModule extends Module {
         }
     }
 
-    protected void runFunc(DirectoryStream<Path> directoryStream) {
-
-    }
+    protected abstract void runFunc(DirectoryStream<Path> directoryStream);
 }

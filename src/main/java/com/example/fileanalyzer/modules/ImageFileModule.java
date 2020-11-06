@@ -22,6 +22,5 @@ public abstract class ImageFileModule extends Module {
             runFunc(image);
     }
 
-    protected void runFunc(BufferedImage image){
-    }
+    protected abstract void runFunc(BufferedImage image);
 }

@@ -18,7 +18,5 @@ public abstract class TextFileModule extends Module {
         }
     }
 
-    protected void runFunc(BufferedReader bufferedReader) {
-
-    }
+    protected abstract void runFunc(BufferedReader bufferedReader);
 }

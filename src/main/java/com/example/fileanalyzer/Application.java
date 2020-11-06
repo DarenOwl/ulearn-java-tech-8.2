@@ -26,23 +26,28 @@ public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+        if (args.length == 0) {
+            initCommands("",true);
+            readCommands(null);
+            return;
+        }
         for (int i = args[0].length() - 1; i >= 0; i--) {
             if (args[0].charAt(i) == '.') {
-                initCommands(args[0].substring(i));
+                initCommands(args[0].substring(i), false);
                 break;
             }
         }
         readCommands(args[0]);
     }
 
-    private static void initCommands(String fileType) {
+    private static void initCommands(String fileType, boolean initAll) {
         commands = new HashMap<>();
         System.out.println("Hello! Here are my functions:");
         int count = 1;
         commands.put("q", Application::exit);
         commands.put("path", Application::printCurrentPath);
         for (Module module : modules) {
-            if (module.supportsFileType(fileType)) {
+            if (module.supportsFileType(fileType) || initAll) {
                 System.out.printf("[%d] %s%n", count, module.getDescription());
                 commands.put(String.valueOf(count), module::runFunc);
                 count++;
@@ -64,25 +69,25 @@ public class Application {
     }
 
     private static void readCommands(String filepath) {
-        Scanner in = new Scanner(System.in);
+        try(Scanner in = new Scanner(System.in)) {
 
-        running = true;
-        while (running) {
-            if (in.hasNextLine()) {
-                String command = in.nextLine();
-                if (!commands.containsKey(command)) {
-                    System.out.println("I don't have an option for " + command);
-                } else {
-                    if (filepath == null) {
-                        System.out.println("enter filepath:");
-                        commands.get(command).accept(in.nextLine());
+            running = true;
+            while (running) {
+                if (in.hasNextLine()) {
+                    String command = in.nextLine();
+                    if (!commands.containsKey(command)) {
+                        System.out.println("I don't have an option for " + command);
                     } else {
-                        commands.get(command).accept(filepath);
+                        if (filepath == null) {
+                            System.out.println("enter filepath:");
+                            commands.get(command).accept(in.nextLine());
+                        } else {
+                            commands.get(command).accept(filepath);
+                        }
                     }
                 }
             }
         }
-        in.close();
     }
 
 }
